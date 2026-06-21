@@ -144,10 +144,10 @@ CaffeinateMenuBar/
 | Workflow | トリガー | 内容 |
 | --- | --- | --- |
 | [`ci.yml`](.github/workflows/ci.yml) | PR / `main` への push | Release ビルド（アドホック署名）と `.app` のアーティファクト保存 |
-| [`release-app-store.yml`](.github/workflows/release-app-store.yml) | タグ `v*` | 署名 → アーカイブ → `.pkg` エクスポート → App Store Connect へアップロード |
+| [`release-app-store.yml`](.github/workflows/release-app-store.yml) | タグ `v*` | `fastlane mac release` を実行（署名 → アーカイブ → `.pkg` エクスポート → App Store Connect API アップロード） |
 | [`xcode-version.yml`](.github/workflows/xcode-version.yml) | 週次 cron | ランナーに新しい Xcode が来たら Issue を自動起票 |
 
-Dependabot で GitHub Actions のバージョン更新を週次で受け取ります（グルーピング有効）。シークレットや証明書の初回セットアップ、タグ駆動のリリース手順は **[docs/release.md](docs/release.md)** を参照してください。
+リリースは **fastlane** ([`fastlane/Fastfile`](fastlane/Fastfile)) で実行します。ローカルでも CI と同じ env で `bundle exec fastlane mac release` を回せます。Dependabot で GitHub Actions と Bundler（fastlane）の両方を週次・グループ化でアップデートします。シークレットや証明書の初回セットアップ、タグ駆動のリリース手順は **[docs/release.md](docs/release.md)** を参照してください。
 
 ## 📜 ライセンス
 

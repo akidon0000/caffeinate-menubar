@@ -1,0 +1,130 @@
+default_platform(:mac)
+
+PROJECT       = "CaffeinateMenuBar.xcodeproj"
+SCHEME        = "CaffeinateMenuBar"
+CONFIGURATION = "Release"
+ARCHIVE_PATH  = "build/CaffeinateMenuBar.xcarchive"
+EXPORT_PATH   = "build/export"
+
+platform :mac do
+  desc "Generate Xcode project (.xcodeproj) from project.yml via XcodeGen"
+  lane :generate_project do
+    sh("cd .. && xcodegen generate")
+  end
+
+  desc "Build Release (ad-hoc signed) — used by PR/CI"
+  lane :build_unsigned do
+    generate_project
+    gym(
+      project: PROJECT,
+      scheme: SCHEME,
+      configuration: CONFIGURATION,
+      skip_archive: true,
+      skip_codesigning: true,
+      destination: "platform=macOS",
+      derived_data_path: "build",
+      xcargs: "CODE_SIGN_IDENTITY=- CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO"
+    )
+  end
+
+  desc "Archive + export + upload to App Store Connect"
+  lane :release do |options|
+    generate_project
+
+    # ── Code signing assets are provided via env vars (base64) in CI.
+    setup_ci if is_ci
+
+    if is_ci
+      import_signing_assets
+    end
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+      key_content: Base64.decode64(ENV.fetch("APP_STORE_CONNECT_KEY_BASE64")),
+      is_key_content_base64: false,
+      in_house: false
+    )
+
+    marketing_version = options[:marketing_version] || ENV["MARKETING_VERSION"] || git_tag_marketing_version
+    build_number      = options[:build_number]      || ENV["BUILD_NUMBER"]      || ENV.fetch("GITHUB_RUN_NUMBER", Time.now.strftime("%Y%m%d%H%M"))
+
+    UI.message("Marketing: #{marketing_version}  /  Build: #{build_number}")
+
+    gym(
+      project: PROJECT,
+      scheme: SCHEME,
+      configuration: CONFIGURATION,
+      destination: "generic/platform=macOS",
+      archive_path: ARCHIVE_PATH,
+      output_directory: EXPORT_PATH,
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        signingStyle: "manual",
+        teamID: ENV.fetch("APPLE_TEAM_ID"),
+        uploadSymbols: true,
+        provisioningProfiles: {
+          ENV.fetch("APP_IDENTIFIER", "com.akidon0000.CaffeinateMenuBar") =>
+            ENV.fetch("PROVISIONING_PROFILE_NAME")
+        }
+      },
+      xcargs: [
+        "MARKETING_VERSION=#{marketing_version}",
+        "CURRENT_PROJECT_VERSION=#{build_number}",
+        "DEVELOPMENT_TEAM=#{ENV.fetch('APPLE_TEAM_ID')}",
+        "CODE_SIGN_STYLE=Manual",
+        "CODE_SIGN_IDENTITY=Apple Distribution",
+        "PROVISIONING_PROFILE_SPECIFIER=#{ENV.fetch('PROVISIONING_PROFILE_NAME')}"
+      ].join(" ")
+    )
+
+    pkg_path = Dir["#{EXPORT_PATH}/*.pkg"].first
+    UI.user_error!("No .pkg produced in #{EXPORT_PATH}") if pkg_path.nil?
+
+    upload_to_app_store(
+      api_key: api_key,
+      pkg: pkg_path,
+      platform: "osx",
+      skip_screenshots: true,
+      skip_metadata: true,
+      submit_for_review: false,
+      precheck_include_in_app_purchases: false,
+      force: true
+    )
+  end
+
+  desc "Internal: import .p12 + .provisionprofile from base64 env vars"
+  private_lane :import_signing_assets do
+    require "base64"
+    require "tmpdir"
+
+    cert_b64    = ENV.fetch("BUILD_CERTIFICATE_BASE64")
+    cert_pw     = ENV.fetch("P12_PASSWORD")
+    profile_b64 = ENV.fetch("PROVISIONING_PROFILE_BASE64")
+
+    cert_path    = File.join(Dir.tmpdir, "dist.p12")
+    profile_path = File.join(Dir.tmpdir, "profile.provisionprofile")
+    File.binwrite(cert_path,    Base64.decode64(cert_b64))
+    File.binwrite(profile_path, Base64.decode64(profile_b64))
+
+    import_certificate(
+      certificate_path: cert_path,
+      certificate_password: cert_pw,
+      keychain_name: ENV.fetch("MATCH_KEYCHAIN_NAME", "fastlane_tmp_keychain"),
+      keychain_password: ENV.fetch("MATCH_KEYCHAIN_PASSWORD", "")
+    )
+
+    install_provisioning_profile(path: profile_path)
+
+    # Surface the profile name for downstream lanes/export options.
+    profile_name = sh("/usr/libexec/PlistBuddy -c 'Print :Name' /dev/stdin <<<\"$(security cms -D -i #{profile_path.shellescape})\"").strip
+    ENV["PROVISIONING_PROFILE_NAME"] = profile_name
+    UI.message("Provisioning profile installed: #{profile_name}")
+  end
+
+  def git_tag_marketing_version
+    ref = ENV["GITHUB_REF_NAME"].to_s
+    ref.start_with?("v") ? ref.sub(/^v/, "") : "1.0.0"
+  end
+end

@@ -19,6 +19,26 @@ updates:
         patterns:
           - "*"
 
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+      include: scope
+    labels:
+      - dependencies
+      - fastlane
+    groups:
+      fastlane:
+        patterns:
+          - "fastlane*"
+          - "xcodeproj"
+
   # Swift Package Manager is not currently used (no Package.resolved).
   # If/when SPM dependencies are introduced, uncomment:
   # - package-ecosystem: swift

@@ -144,10 +144,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full checklist.
 | Workflow | Trigger | What it does |
 | --- | --- | --- |
 | [`ci.yml`](.github/workflows/ci.yml) | PR / push to `main` | Build Release (ad-hoc signed), upload `.app` artifact |
-| [`release-app-store.yml`](.github/workflows/release-app-store.yml) | tag `v*` | Sign, archive, export `.pkg`, upload to App Store Connect |
+| [`release-app-store.yml`](.github/workflows/release-app-store.yml) | tag `v*` | Run `fastlane mac release` — sign, archive, export `.pkg`, upload via App Store Connect API |
 | [`xcode-version.yml`](.github/workflows/xcode-version.yml) | weekly cron | Open an issue when a newer Xcode is available on the runner |
 
-Dependabot keeps GitHub Actions versions current (weekly, grouped). See **[docs/release.md](docs/release.md)** for the one-time secret/cert setup and the tag-driven release flow.
+Releases use **fastlane** ([`fastlane/Fastfile`](fastlane/Fastfile)) — locally you can run `bundle exec fastlane mac release` against the same env vars CI uses. Dependabot keeps both GitHub Actions and Bundler (fastlane) up to date weekly (grouped). See **[docs/release.md](docs/release.md)** for the one-time secret/cert setup and the tag-driven release flow.
 
 ## 📜 License
 

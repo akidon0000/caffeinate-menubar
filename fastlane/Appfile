@@ -1,0 +1,6 @@
+app_identifier(ENV["APP_IDENTIFIER"] || "com.akidon0000.CaffeinateMenuBar")
+team_id(ENV["APPLE_TEAM_ID"])
+
+for_platform :mac do
+  # No itc_team_id needed when using App Store Connect API key auth.
+end
