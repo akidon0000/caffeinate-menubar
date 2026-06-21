@@ -1,0 +1,52 @@
+name: Xcode version watcher
+
+# Weekly probe of the macOS runner's Xcode lineup. If a newer stable Xcode is
+# available on the latest macos-* runner, open a tracking issue so we can bump
+# the version pinned in ci.yml / release-app-store.yml.
+on:
+  schedule:
+    - cron: "0 0 * * 1" # Mondays 00:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect installed Xcodes
+        id: probe
+        run: |
+          set -euo pipefail
+          ls /Applications | grep -E '^Xcode' | sort -V | tee xcodes.txt
+          LATEST=$(grep -oE 'Xcode_[0-9.]+' xcodes.txt | sort -V | tail -n1 || true)
+          echo "latest=$LATEST" >> "$GITHUB_OUTPUT"
+          PINNED=$(grep -oE 'Xcode_[0-9.]+\.app' .github/workflows/ci.yml | head -n1 | sed 's/.app$//')
+          echo "pinned=$PINNED" >> "$GITHUB_OUTPUT"
+
+      - name: Open issue if newer Xcode available
+        if: steps.probe.outputs.latest != '' && steps.probe.outputs.latest != steps.probe.outputs.pinned
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const latest = "${{ steps.probe.outputs.latest }}";
+            const pinned = "${{ steps.probe.outputs.pinned }}";
+            const title = `Bump Xcode: ${pinned} → ${latest}`;
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: "ci",
+            });
+            if (issues.some(i => i.title === title)) return;
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              labels: ["ci", "dependencies"],
+              body: `The macOS GitHub-hosted runner now ships **${latest}**, but our workflows pin **${pinned}**.\n\n- Update \`sudo xcode-select -s /Applications/${latest}.app\` in \`.github/workflows/ci.yml\` and \`.github/workflows/release-app-store.yml\`.\n- Re-run CI to confirm nothing regressed.`,
+            });

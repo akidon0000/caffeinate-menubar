@@ -15,6 +15,7 @@
   <img alt="UI" src="https://img.shields.io/badge/SwiftUI-MenuBarExtra-0A84FF?style=flat-square"/>
   <img alt="License" src="https://img.shields.io/badge/License-MIT-3A1A1A?style=flat-square"/>
   <img alt="PRs" src="https://img.shields.io/badge/PRs-welcome-FF8A8A?style=flat-square"/>
+  <a href="https://github.com/akidon0000/caffeinate-menubar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/akidon0000/caffeinate-menubar/actions/workflows/ci.yml/badge.svg"/></a>
 </p>
 
 <p align="center">
@@ -137,6 +138,16 @@ CaffeinateMenuBar/
 5. レビューはお互いに優しく 🙂
 
 詳しくは [CONTRIBUTING.md](CONTRIBUTING.md) を参照してください。
+
+## 🤖 CI / リリース
+
+| Workflow | トリガー | 内容 |
+| --- | --- | --- |
+| [`ci.yml`](.github/workflows/ci.yml) | PR / `main` への push | Release ビルド（アドホック署名）と `.app` のアーティファクト保存 |
+| [`release-app-store.yml`](.github/workflows/release-app-store.yml) | タグ `v*` | 署名 → アーカイブ → `.pkg` エクスポート → App Store Connect へアップロード |
+| [`xcode-version.yml`](.github/workflows/xcode-version.yml) | 週次 cron | ランナーに新しい Xcode が来たら Issue を自動起票 |
+
+Dependabot で GitHub Actions のバージョン更新を週次で受け取ります（グルーピング有効）。シークレットや証明書の初回セットアップ、タグ駆動のリリース手順は **[docs/release.md](docs/release.md)** を参照してください。
 
 ## 📜 ライセンス
 

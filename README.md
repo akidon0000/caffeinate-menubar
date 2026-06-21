@@ -15,6 +15,7 @@
   <img alt="UI" src="https://img.shields.io/badge/SwiftUI-MenuBarExtra-0A84FF?style=flat-square"/>
   <img alt="License" src="https://img.shields.io/badge/License-MIT-3A1A1A?style=flat-square"/>
   <img alt="PRs" src="https://img.shields.io/badge/PRs-welcome-FF8A8A?style=flat-square"/>
+  <a href="https://github.com/akidon0000/caffeinate-menubar/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/akidon0000/caffeinate-menubar/actions/workflows/ci.yml/badge.svg"/></a>
 </p>
 
 <p align="center">
@@ -137,6 +138,16 @@ Good places to help:
 5. Be kind in reviews 🙂
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full checklist.
+
+## 🤖 CI / Release
+
+| Workflow | Trigger | What it does |
+| --- | --- | --- |
+| [`ci.yml`](.github/workflows/ci.yml) | PR / push to `main` | Build Release (ad-hoc signed), upload `.app` artifact |
+| [`release-app-store.yml`](.github/workflows/release-app-store.yml) | tag `v*` | Sign, archive, export `.pkg`, upload to App Store Connect |
+| [`xcode-version.yml`](.github/workflows/xcode-version.yml) | weekly cron | Open an issue when a newer Xcode is available on the runner |
+
+Dependabot keeps GitHub Actions versions current (weekly, grouped). See **[docs/release.md](docs/release.md)** for the one-time secret/cert setup and the tag-driven release flow.
 
 ## 📜 License
 
