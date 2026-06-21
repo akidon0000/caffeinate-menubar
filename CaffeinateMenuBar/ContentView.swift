@@ -22,14 +22,13 @@ struct ContentView: View {
             Divider()
 
             GroupBox("Options") {
-                VStack(alignment: .leading, spacing: 4) {
-                    Toggle("-d  Prevent display sleep", isOn: $preventDisplaySleep)
-                    Toggle("-i  Prevent idle sleep", isOn: $preventIdleSleep)
-                    Toggle("-m  Prevent disk idle sleep", isOn: $preventDiskSleep)
-                    Toggle("-s  Prevent system sleep (AC only)", isOn: $preventSystemSleep)
-                    Toggle("-u  Declare user active", isOn: $assertUserActive)
+                VStack(alignment: .leading, spacing: 8) {
+                    flagToggle("-d", "ディスプレイのスリープを防ぐ（画面を点けっぱなし）", isOn: $preventDisplaySleep)
+                    flagToggle("-i", "システムのアイドルスリープを防ぐ", isOn: $preventIdleSleep)
+                    flagToggle("-m", "ディスクのアイドルスリープを防ぐ", isOn: $preventDiskSleep)
+                    flagToggle("-s", "システムスリープを防ぐ（AC電源接続中のみ有効）", isOn: $preventSystemSleep)
+                    flagToggle("-u", "ユーザーが操作中であると宣言する（既定で 5 秒間）", isOn: $assertUserActive)
                 }
-                .toggleStyle(.checkbox)
                 .padding(.vertical, 4)
             }
 
@@ -88,6 +87,17 @@ struct ContentView: View {
         .padding(14)
         .frame(width: 320)
         .onReceive(ticker) { now = $0 }
+    }
+
+    @ViewBuilder
+    private func flagToggle(_ flag: String, _ description: String, isOn: Binding<Bool>) -> some View {
+        Toggle(isOn: isOn) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(flag).font(.system(.body, design: .monospaced))
+                Text(description).font(.caption).foregroundStyle(.secondary)
+            }
+        }
+        .toggleStyle(.checkbox)
     }
 
     private var header: some View {

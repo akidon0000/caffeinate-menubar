@@ -1,0 +1,27 @@
+name: CaffeinateMenuBar
+options:
+  bundleIdPrefix: com.akidon0000
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    PRODUCT_NAME: CaffeinateMenuBar
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_LSUIElement: YES
+    INFOPLIST_KEY_NSHumanReadableCopyright: ""
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: NO
+targets:
+  CaffeinateMenuBar:
+    type: application
+    platform: macOS
+    sources:
+      - path: CaffeinateMenuBar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.akidon0000.CaffeinateMenuBar
