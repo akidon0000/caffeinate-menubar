@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" width="1280" height="360">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1B1B1F"/>
+      <stop offset="1" stop-color="#2A1212"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF8A8A"/>
+      <stop offset="1" stop-color="#D55454"/>
+    </linearGradient>
+    <linearGradient id="steam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="360" fill="url(#bg)"/>
+
+  <!-- Faux menu bar strip -->
+  <rect x="0" y="0" width="1280" height="36" fill="#0E0E12" opacity="0.65"/>
+  <circle cx="1180" cy="18" r="8" fill="url(#accent)"/>
+  <g transform="translate(1166,4) scale(0.11)" fill="#FFFFFF">
+    <path d="M70 110 h100 a8 8 0 0 1 8 8 v40 a40 40 0 0 1 -40 40 h-36 a40 40 0 0 1 -40 -40 v-40 a8 8 0 0 1 8 -8 z"/>
+    <path d="M178 124 h14 a22 22 0 0 1 0 44 h-14" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <text x="1198" y="23" font-family="-apple-system, SF Pro Display, Helvetica, sans-serif" font-size="13" fill="#FFB3B3">Awake</text>
+
+  <!-- Logo -->
+  <g transform="translate(120,90)">
+    <rect width="180" height="180" rx="40" fill="url(#accent)"/>
+    <g transform="translate(-8,-2)">
+      <path d="M70 110 h100 a8 8 0 0 1 8 8 v40 a40 40 0 0 1 -40 40 h-36 a40 40 0 0 1 -40 -40 v-40 a8 8 0 0 1 8 -8 z" fill="#FFFFFF" transform="translate(0,8)"/>
+      <path d="M178 124 h14 a22 22 0 0 1 0 44 h-14" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" transform="translate(0,8)"/>
+      <path d="M104 70 q-10 14 0 28 q10 14 0 28" stroke="url(#steam)" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M128 60 q-10 16 0 32 q10 16 0 32" stroke="url(#steam)" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <path d="M152 70 q-10 14 0 28 q10 14 0 28" stroke="url(#steam)" stroke-width="7" stroke-linecap="round" fill="none"/>
+    </g>
+  </g>
+
+  <!-- Title block -->
+  <g transform="translate(340,140)" font-family="-apple-system, SF Pro Display, Helvetica, sans-serif" fill="#FFFFFF">
+    <text font-size="64" font-weight="700">CaffeinateMenuBar</text>
+    <text y="48" font-size="22" fill="#E8C8C8">Keep your Mac awake — from the menu bar.</text>
+    <g transform="translate(0,92)">
+      <rect width="140" height="32" rx="16" fill="#3A1A1A" stroke="#FF8A8A" stroke-width="1"/>
+      <text x="70" y="21" font-size="14" text-anchor="middle" fill="#FFB3B3">macOS 13+ · SwiftUI</text>
+      <rect x="156" width="120" height="32" rx="16" fill="#3A1A1A" stroke="#FF8A8A" stroke-width="1"/>
+      <text x="216" y="21" font-size="14" text-anchor="middle" fill="#FFB3B3">MIT License</text>
+      <rect x="292" width="160" height="32" rx="16" fill="#3A1A1A" stroke="#FF8A8A" stroke-width="1"/>
+      <text x="372" y="21" font-size="14" text-anchor="middle" fill="#FFB3B3">PRs welcome</text>
+    </g>
+  </g>
+</svg>

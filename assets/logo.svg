@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF6B6B"/>
+      <stop offset="1" stop-color="#C44545"/>
+    </linearGradient>
+    <linearGradient id="steam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)"/>
+  <g transform="translate(0,6)">
+    <path d="M70 110 h100 a8 8 0 0 1 8 8 v40 a40 40 0 0 1 -40 40 h-36 a40 40 0 0 1 -40 -40 v-40 a8 8 0 0 1 8 -8 z" fill="#FFFFFF"/>
+    <path d="M178 124 h14 a22 22 0 0 1 0 44 h-14" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+    <ellipse cx="124" cy="118" rx="50" ry="6" fill="#3A1212" opacity="0.25"/>
+    <path d="M104 70 q-10 14 0 28 q10 14 0 28" stroke="url(#steam)" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M128 60 q-10 16 0 32 q10 16 0 32" stroke="url(#steam)" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M152 70 q-10 14 0 28 q10 14 0 28" stroke="url(#steam)" stroke-width="8" stroke-linecap="round" fill="none"/>
+  </g>
+</svg>
