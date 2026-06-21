@@ -19,7 +19,7 @@ jobs:
     runs-on: macos-14
     environment: appstore
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_15.4.app
@@ -148,7 +148,7 @@ jobs:
 
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: appstore-${{ steps.ver.outputs.marketing }}-${{ steps.ver.outputs.build }}
           path: |

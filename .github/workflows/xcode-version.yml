@@ -16,7 +16,7 @@ jobs:
   check:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Detect installed Xcodes
         id: probe
@@ -30,7 +30,7 @@ jobs:
 
       - name: Open issue if newer Xcode available
         if: steps.probe.outputs.latest != '' && steps.probe.outputs.latest != steps.probe.outputs.pinned
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const latest = "${{ steps.probe.outputs.latest }}";
